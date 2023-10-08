@@ -9,9 +9,18 @@ function ffmpeg {
 /usr/local/bin/ffmpeg $@ 2>&1 | python3 ~/path/to/parser.py
 }
 
-# alternatively, you can just append this to your ffmpeg command:
+# Alternatively, you can just append this to your ffmpeg command:
 
 2>&1 | python3 ~/path/to/parser.py
+
+# Requires a text file (filename.txt) containing the currect encodes filename 
+
+# Example bat file:
+
+for %%a in (*.avs) do echo %%~na > filename.txt & ffmpeg -i "%%a" -vcodec libx264 "%%~na.mkv" -n 2>&1 | python "parser.py"
+
+# ^ This will overwrite the first line of the text file everytime the bat loops with the new current file name.
+
 '''
 
 APP_ID = '447917369512296458'
@@ -21,6 +30,7 @@ import sys
 import time
 import re
 import rpc as discordRP
+from pathlib import Path
 
 # super basic arguments:
 #  -q: do not pass through ffmpeg's output
@@ -33,6 +43,8 @@ if '-q' in sys.argv:
 if '-s' in sys.argv:
 	SHOW_JSON = True
 
+txt = Path('filename.txt').read_text()
+
 rpc = discordRP.DiscordIpcClient.for_platform(APP_ID) # discord rpc object
 
 norm_space = re.compile(r'\s+')  # precompiled regex
@@ -43,7 +55,7 @@ start_time = time.time()
 last_update = time.time()-100
 
 def setactivity(data):
-	firstline = 'Frame {} @ {}fps, {}'.format(data.get('frame','NA'),data.get('fps','NA'),data.get('bitrate','NA'))
+	firstline = 'File {}, Frame {} @ {}fps, {}'.format(data.get('File',txt),data.get('frame','NA'),data.get('fps','NA'),data.get('bitrate','NA'))
 	secondline = 'Position: {}, Size: {}'.format(data.get('time','NA'),data.get('size','NA'))
 
 	activity = {
