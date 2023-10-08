@@ -1,3 +1,14 @@
+## Changes from [vampjaz](https://github.com/vampjaz/ffmpeg-rp) 
+
+Now requires a text file (filename.txt) containing the currect encodes filename 
+
+Example bat file:
+
+```for %%a in (*.avs) do echo %%~na > filename.txt & ffmpeg -i "%%a" -vcodec libx264 "%%~na.mkv" -n 2>&1 | python "parser.py"```
+
+^ This will overwrite the first line of the text file everytime the bat loops with the new current file name.
+
+
 FFMPEG rich presence for Discord
 ===
 
