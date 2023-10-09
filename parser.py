@@ -43,7 +43,7 @@ if '-q' in sys.argv:
 if '-s' in sys.argv:
 	SHOW_JSON = True
 
-txt = Path('filename.txt').read_text()
+txt = Path('filename.txt').read_text().rstrip() 
 
 rpc = discordRP.DiscordIpcClient.for_platform(APP_ID) # discord rpc object
 
@@ -55,7 +55,7 @@ start_time = time.time()
 last_update = time.time()-100
 
 def setactivity(data):
-	firstline = 'File {}, Frame {} @ {}fps, {}'.format(data.get('File',txt),data.get('frame','NA'),data.get('fps','NA'),data.get('bitrate','NA'))
+	firstline = '{}, Frame {} @ {}fps, {}'.format(data.get('File',txt),data.get('frame','NA'),data.get('fps','NA'),data.get('bitrate','NA'))
 	secondline = 'Position: {}, Size: {}'.format(data.get('time','NA'),data.get('size','NA'))
 
 	activity = {
